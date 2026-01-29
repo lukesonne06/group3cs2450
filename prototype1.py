@@ -44,7 +44,8 @@ def execute_program():
         if opcode == 10:
             while True:
                 try:
-                    value = int(input("Enter an integer: "))
+                    print("Enter an interger:")
+                    value = int(input())
                     if -9999 <= value <= 9999:
                         memory[operand] = value
                         break
@@ -97,4 +98,5 @@ def execute_program():
             break
 
         pc += 1
+
 
