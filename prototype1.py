@@ -1,32 +1,35 @@
 
 memory = [0] * 100
 
-def load_words():
-    print("Enter words (type -99999 to finish):")
-    
+def load_words(file_name):
     i = 0
-    while True:
-        word = input()
+    try:
+        with open(file_name, "r") as file:
+            for line in file:
+                if i >= len(memory):
+                    print("Memory full!")
+                    break
 
-        try:
-            word = int(word)   # convert to int
-        except ValueError:
-            print("Invalid input, please enter a integer.")
-            continue
+                line = line.strip()
 
-        if word == -99999:
-            break
+                try:
+                    word = int(line)
+                except ValueError:
+                    print(f"Invalid input in file (not an integer): {line}")
+                    continue
 
-        if i >= len(memory):
-            print("Memory full!")
-            break
+                if word == -99999:
+                    break
 
-        if word < -9999 or word > 9999:
-            print("Invalid input, please enter a four digit integer.")
-        else:
-            memory[i] = word
-            i += 1
+                if word < -9999 or word > 9999:
+                    print(f"Invalid input (not four digits): {word}")
+                else:
+                    memory[i] = word
+                    i += 1
 
+    except FileNotFoundError:
+        print(f"Error: file '{file_name}' not found.")
+        
 def execute_program():
     pc = 0
     accumulator = 0
@@ -98,5 +101,6 @@ def execute_program():
             break
 
         pc += 1
+
 
 
