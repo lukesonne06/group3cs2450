@@ -1,9 +1,14 @@
-from prototype1 import load_words, memory, execute_program
+from prototype1 import UVSimulator
+import sys
+
 
 def main():
-    file_name = input("Enter the name of the file to load: ")
-    load_words(file_name)
-    execute_program()
+    file_name = sys.argv[1]
+    simulator = UVSimulator(file_name)
+    simulator.load_words()
+    simulator.execute_program()
+    
+    
 
 if __name__ == "__main__":
     main()
