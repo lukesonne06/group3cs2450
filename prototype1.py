@@ -90,14 +90,14 @@ class UVSimulator:
             elif opcode == 33:    # Multiply: multiply accumlator by memory value
                 accumulator *= self.memory[operand]
 
-            elif opcode == 40:    #
+            elif opcode == 40:    # Branch: unconditional jump
                 pc = operand-1
 
-            elif opcode == 41:    
+            elif opcode == 41:    # Branch: jump if accumulator is < 0
                 if accumulator < 0:
                     pc = operand-1
             
-            elif opcode == 42:
+            elif opcode == 42:    # Branch: Jump is accumlator == 0
                 if accumulator == 0:
                     pc = operand-1
             
@@ -110,6 +110,7 @@ class UVSimulator:
                 break
 
             pc += 1    # Move to next job
+
 
 
 
