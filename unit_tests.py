@@ -11,7 +11,9 @@ class TestUVSimStuff(unittest.TestCase):
         # Runs before every test
         # Create a fresh similator with default memory size
         self.sim = UVSimulator(memory_size=100)
-        
+
+    # Use Case 01
+
     def test_memory_starts_empty(self):
         # Memory is initialized with zeros
         self.assertEqual(len(self.sim.memory), 100)
@@ -22,6 +24,8 @@ class TestUVSimStuff(unittest.TestCase):
         sim = UVSimulator(memory_size = 50)
         self.assertEqual(len(sim.memory), 50)
         
+    # Use Case 02
+    
     def test_loading_test1_file(self):
         # Loading a valid file should populate memory correctly
         self.sim.file_name = "Test1.txt"
@@ -56,6 +60,7 @@ class TestUVSimStuff(unittest.TestCase):
         sys.stdout = old_stdout
         self.assertIn("Memory full", output)
         
+    # Use Case 03
         
     def test_read_puts_number_in_memory(self):
         # Read instrustion should store user input at operand address
@@ -84,6 +89,8 @@ class TestUVSimStuff(unittest.TestCase):
         sys.stdout = old_stdout
         self.assertEqual(self.sim.memory[50], 42)
         
+    # Use Case 04
+
     def test_write_prints_value(self):
         # Write instruction should print memory value
         self.sim.memory[0] = 1150
@@ -108,6 +115,8 @@ class TestUVSimStuff(unittest.TestCase):
         sys.stdout = old_stdout
         self.assertIn("0", output)
         
+    # Use Case 05
+
     def test_load_moves_to_accumulator(self):
         # Load followed by store should copy value correctly 
         self.sim.memory[0] = 2050
@@ -132,8 +141,10 @@ class TestUVSimStuff(unittest.TestCase):
         sys.stdout = old_stdout
         self.assertEqual(self.sim.memory[45], -5678)
         
+    # Use Case 06
+
     def test_store_saves_accumulator(self):
-        # Sore should save accumulator to memory
+        # Store should save accumulator to memory
         self.sim.memory[0] = 2050
         self.sim.memory[1] = 2160
         self.sim.memory[2] = 4300
@@ -156,6 +167,8 @@ class TestUVSimStuff(unittest.TestCase):
         sys.stdout = old_stdout
         self.assertEqual(self.sim.memory[75], 0)
         
+    # Use Case 07
+
     def test_add_two_positives(self):
         # Load values at 50, add value at 51, store result in 52
         self.sim.memory[0] = 2050
@@ -184,6 +197,8 @@ class TestUVSimStuff(unittest.TestCase):
         sys.stdout = old_stdout
         self.assertEqual(self.sim.memory[52], -30)    
      
+    # Use Case 08
+
     def test_subtract_basic(self): 
         # Subtract should compute accumulator - operand
         self.sim.memory[0] = 2050
@@ -212,6 +227,8 @@ class TestUVSimStuff(unittest.TestCase):
         sys.stdout = old_stdout
         self.assertEqual(self.sim.memory[52], -70)
         
+    # Use Case 09
+
     def test_divide_evenly(self):
         # Divide shoudl perform integer division
         self.sim.memory[0] = 2050
@@ -240,6 +257,8 @@ class TestUVSimStuff(unittest.TestCase):
         sys.stdout = old_stdout
         self.assertIn("Division by zero", output)
         
+    # Use Case 10
+
     def test_multiply_normal(self):
         # Multiply should compute product correctly
         self.sim.memory[0] = 2050
@@ -268,6 +287,8 @@ class TestUVSimStuff(unittest.TestCase):
         sys.stdout = old_stdout
         self.assertEqual(self.sim.memory[52], 0)
         
+    # Use Case 11
+
     def test_branch_jumps_correctly(self):
         # Branch should jump to instruction 5, skipping input instruction
         self.sim.memory[0] = 4005
@@ -294,6 +315,8 @@ class TestUVSimStuff(unittest.TestCase):
         sys.stdout = old_stdout
         self.assertIn("Halting", output)
         
+    # Use Case 12
+
     def test_branchneg_when_negative(self):
         # Branching should jump when accumulator is negative
         self.sim.memory[0] = 2050
@@ -322,6 +345,8 @@ class TestUVSimStuff(unittest.TestCase):
         output = sys.stdout.getvalue()
         sys.stdout = old_stdout
         
+    # Use Case 13
+
     def test_branchzero_when_zero(self):
         # Brachzero shoudl jump when accumulator equals zero
         self.sim.memory[0] = 2050
@@ -350,6 +375,8 @@ class TestUVSimStuff(unittest.TestCase):
         output = sys.stdout.getvalue()
         sys.stdout = old_stdout
         
+    # Use Case 14
+        
     def test_halt_stops_everything(self):
         # Halt should immediately stop execution
         self.sim.memory[0] =4300
@@ -372,6 +399,8 @@ class TestUVSimStuff(unittest.TestCase):
         sys.stdout = old_stdout
         self.assertNotIn("Enter", output)
         
+    # Use Case 15
+
     def test_bad_opcode_fails(self):
         # Invalid opcode should produce an error 
         self.sim.memory[0] = 9999
