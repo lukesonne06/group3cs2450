@@ -4,37 +4,26 @@ class UVSimulator:
         self.memory = [0] * memory_size    # Memory assigned as a list of zeros
         self.file_name = file_name
 
-    def load_words(self):
-        # Load integer words from the file to memory
+    def load_from_text(self, text):
         i = 0
-        try:
-            with open(self.file_name, "r") as file:
-                for line in file:
-                    if i >= len(self.memory):    # Check if memory is full
-                        print("Memory full!")
-                        break
+        words = text.split()   # handles spaces and new lines
 
-                    line = line.strip()    # Remove whitespace
-
-                    # Attempt to convert line to an integer
-                    try:
-                        word = int(line)
-                    except ValueError:
-                        print(f"Invalid input in file (not an integer): {line}")
-                        continue
-                    # Stop reading at -99999
-                    if word == -99999:
-                        break
-                    # Check that the integer is a valid 4 digit word
-                    if word < -9999 or word > 9999:
-                        print(f"Invalid input (not four digits): {word}")
-                    else:
-                        self.memory[i] = word    # Store word in memory
-                        i += 1
-
-        except FileNotFoundError:
-            # Output if file does not exist
-            print(f"Error: file '{self.file_name}' not found.")
+        for word in words:
+            if i >= len(self.memory):
+                print("Memory full!")
+                break
+            try:
+                value = int(word)
+            except ValueError:
+                print(f"Invalid input (not an integer): {word}")
+                continue
+            if value == -99999:
+                break
+            if value < -9999 or value > 9999:
+                print(f"Invalid input (not four digits): {value}")
+            else:
+                self.memory[i] = value
+                i += 1
             
     def execute_program(self):
         # Execute program
@@ -110,6 +99,7 @@ class UVSimulator:
                 break
 
             pc += 1    # Move to next job
+
 
 
 
