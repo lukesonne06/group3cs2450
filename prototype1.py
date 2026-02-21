@@ -2,7 +2,6 @@ class UVSimulator:
     def __init__(self, file_name=None, memory_size=100):
         # Initialize the simulator with file and memory size
         self.memory = [0] * memory_size    # Memory assigned as a list of zeros
-        self.file_name = file_name
 
     def load_from_text(self, text):
         i = 0
@@ -99,6 +98,7 @@ class UVSimulator:
                 break
 
             pc += 1    # Move to next job
+
 
 
 
