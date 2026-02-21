@@ -7,28 +7,53 @@ from prototype1 import UVSimulator    # Import UVUSimlator class
 
 
 class WindowSimulator:
+     """
+     Main GUI controller for the UV Simulator application
+
+     Handles: 
+     - Creating and organizing all widgets
+     - Starting/stopping the simulator
+     - Manages the background execution
+     - Passes messages between Simulator and GUI
+
+     """
 
     def __init__(self, win):
-        # Get the file name from the command-line arguments
-        # sys.argv[1] is the first argument after the script name
-        #file_name = sys.argv[1]
 
+        # Store reference to the main Tkinter window
         self.main_tkinter_window =win
+
+        # Configure Window Properties
         self.main_tkinter_window.title("UVSim")
         self.main_tkinter_window.configure(bg ="#f0f0f0")
-
         self.main_tkinter_window.geometry("800x600")
+        
+        '''
+        Queue used to for the simulator to communicate with the GUI 
+        to the user input. It prevents multiple simulator instances running at once
+        '''
         self.messaging_queue=queue.Queue()
-
         self.inputting_main_windowueue =queue.Queue()
         self.uv_sim_instanceRunning=False
+
+        # Builds all the widgets
         self.widget_creator()
+
+        # Start polling queue for simulator messages
         self.main_tkinter_window.after(100 ,self.queue_checker)
 
-
+    
     def widget_creator(self):
-                
+                """
+                Creates and lays out all GUI components:
+                - Header
+                - Buttons
+                - Console outpu
+                - Code editor
+                - User input field
+                """
 
+                # --- Header Section ---
                 green_header =tk.Frame(self.main_tkinter_window ,bg="#5a9e47",height=60)
                 
                 green_header.pack(fill="x")
@@ -41,6 +66,7 @@ class WindowSimulator:
                 button_row_frame=tk.Frame(self.main_tkinter_window,bg ="#f0f0f0",pady=6)
                 button_row_frame.pack(fill ="x",padx=10)
 
+                # --- Button Control (Load / Run / Reset) ---
                 self.loading_button =tk.Button(button_row_frame ,text="Load File",
                     font=("Arial" ,10),bg="#5a9e47",fg="white",
                     padx=10 ,pady=4,relief="flat",command=self.file_picker)
@@ -69,6 +95,7 @@ class WindowSimulator:
                 acc_and_entry_frame.pack(fill ="x",pady=(0,8))
                 tk.Label(acc_and_entry_frame ,text="Accumulator:",font=("Arial",11),bg="#f0f0f0").pack(side="left")
 
+                # --- Left Panel (Accumulator + Console Output) ---
                 self.accumulator_box =tk.StringVar()
 
                 self.accumulator_box.set("0")
@@ -80,6 +107,7 @@ class WindowSimulator:
                 tk.Label(left_panel_frame ,text="Console:",font=("Arial",11),
                     bg ="#f0f0f0",anchor="w").pack(fill="x")
 
+                # --- Console Output Box ---
                 self.outputting_box =tk.Text(left_panel_frame,
                     font=("Courier New" ,10),bg="white",fg="black",
                         relief ="solid",bd=1,state="disabled",wrap="word")
@@ -104,6 +132,7 @@ class WindowSimulator:
 
                 self.typeRow.pack(fill ="x",pady=(6,0))
 
+                # --- User Input Row ---
                 tk.Label(self.typeRow ,text="Enter value:",font=("Arial",10),bg="#f0f0f0").pack(side ="left")
 
                 self.user_typed_string =tk.StringVar()
@@ -122,6 +151,7 @@ class WindowSimulator:
 
                 self.typeRow.pack_forget()
 
+                # --- Right Panel ( Program Code Editor) ---
                 tk.Label(right_panel_frame ,text="Program: (enter or paste here)",
                     font=("Arial",11) ,bg="#f0f0f0",anchor="w").pack(fill="x")
 
@@ -148,6 +178,11 @@ class WindowSimulator:
 
 
     def file_picker(self):
+        """
+        Opens file dialog and loads selected program text
+        into the code editor.
+        """
+        # Open file selection dialog
         file_dialog_path =filedialog.askopenfilename(
             title="Open BasicML File",
                 filetypes=[("Text files","*.txt") ,("All files","*.*")])
@@ -155,6 +190,7 @@ class WindowSimulator:
         if not file_dialog_path:
                 return
         try:
+            # Replace current editor contents with file contents
             with open(file_dialog_path ,"r") as f:
                     loaded_file_contents =f.read()
             self.code_box.delete("1.0" ,"end")
@@ -164,22 +200,30 @@ class WindowSimulator:
             self.box_print(f"Loaded: {file_dialog_path}\n" ,"info")
 
         except:
+                # Read error
                 self.box_print("Couldnt open that file\n" ,"error")
 
 
     def sim_starter(self):
+        """
+        Validate propram input and starts simulator 
+        in the background
+        """
             if self.uv_sim_instanceRunning ==True:
-
+                
+                # Prevents multiple executions to run at the same time
                 self.box_print("Already running.\n" ,"error")
 
                 return
+            # Get a message from program editor
             program_editor_text_pull =self.code_box.get("1.0","end").strip()
             if not program_editor_text_pull:
                     self.box_print("Nothing to run.\n","error")
 
                     return
+            # Clear previous output before starting
             self.output_wiper()
-
+            
             self.box_print("Starting...\n" ,"info")
 
             # Create the simulator instance using the input file
@@ -199,29 +243,41 @@ class WindowSimulator:
 
 
     def background_running(self):
-
+        """
+        Runs the simulator in a separate thread.
+        Sends results back to GUI through messaging_queue
+        """
+        # Save original stdn/stdout so we can restore later
         save_stdout_before_replace =sys.stdout
         save_stdin_before_replace=sys.stdin
         sys.stdout =PrintCallInterceptor(self.messaging_queue)
-
         sys.stdin =InputInterceptor(self.inputting_queue ,self.messaging_queue)
 
         try:
+                # If simulator crashes, report error to GUI
                 self.uv_sim_instance.execute_program()
         except Exception as crash_exeption_object:
 
             self.messaging_queue.put(("error" ,f"Crashed: {crash_exeption_object}\n"))
 
         finally:
+                # Restore original stdn/stdout
                 sys.stdout=save_stdout_before_replace
                 sys.stdin =save_stdin_before_replace
 
+                # Notify GUI that execution is complete
                 self.messaging_queue.put(("done",""))
 
 
     def queue_checker(self):
+        """
+        Periodically checks messaging_queue for updates
+        from the simulator thread and updates GUI safely. 
+        """
         try:
                 while True:
+
+                    # Process all pending messages from simulator
                     message_queue_object_exeption ,message_content=self.messaging_queue.get_nowait()
                     if message_queue_object_exeption =="print":
                         self.box_print(message_content ,"normal")
@@ -234,13 +290,15 @@ class WindowSimulator:
 
                     elif message_queue_object_exeption=="info":
                             self.box_print(message_content,"info")
-
+                        
+                    # Show input field when simulator requests user input
                     elif message_queue_object_exeption =="need_input":
                         self.typeRow.pack(fill="x" ,pady=(6,0))
 
 
                         self.int_entry_box.focus()
-
+                        
+                    # enable Run button after program finishes
                     elif message_queue_object_exeption=="done":
                         self.uv_sim_instanceRunning =False
 
@@ -258,6 +316,10 @@ class WindowSimulator:
 
 
     def input_sender(self ,event=None):
+        """
+        Validates user input and sends it to simulator
+        through inputting_queue
+        """
             user_string =self.user_typed_string.get().strip()
 
             try:
@@ -278,6 +340,10 @@ class WindowSimulator:
 
 
     def clear_everything(self):
+         """
+        Resets console output and accumlator display. 
+        Does not allow reset while simulator is runnung.
+        """
         if self.uv_sim_instanceRunning ==True:
                 
                 self.box_print("Cant reset while running.\n" ,"error")
@@ -293,6 +359,9 @@ class WindowSimulator:
 
 
     def box_print(self ,txt,colorTag ="normal"):
+        """
+        Safely inserts colored text into console output box.
+        """
             self.outputting_box.config(state="normal")
 
             self.outputting_box.insert("end" ,txt,colorTag)
@@ -313,6 +382,12 @@ class WindowSimulator:
 
 
 class PrintCallInterceptor:
+    """
+    Replaces sys.stdout buring simulator execution.
+
+    Uses pring() output and sends the message to GUI 
+    using the queue.
+    """
 
     def __init__(self ,q):
             
@@ -337,6 +412,13 @@ class PrintCallInterceptor:
 
 
 class InputInterceptor:
+    """
+    Replaces sys.stdin during simulator execution. 
+
+    When simulator calls input(), this class:
+    1. Notifies the GUI that input is required
+    2. Waits for user input
+    """
 
     def __init__(self ,q,messages):
         self.q=q
@@ -350,8 +432,8 @@ class InputInterceptor:
 
 
 
-# This confirms main() only runs when this file is executed
 def main():
+    # Entry point of application
     main_window =tk.Tk()
 
     WindowSimulator(main_window)
@@ -360,6 +442,7 @@ def main():
 
 if __name__ =="__main__":
     main()
+
 
 
 
