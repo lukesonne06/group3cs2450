@@ -1,5 +1,5 @@
 class UVSimulator:
-    def __init__(self, file_name=None, memory_size=100):
+    def __init__(self, memory_size=100):
         # Initialize the simulator with file and memory size
         self.memory = [0] * memory_size    # Memory assigned as a list of zeros
 
@@ -98,6 +98,7 @@ class UVSimulator:
                 break
 
             pc += 1    # Move to next job
+
 
 
 
