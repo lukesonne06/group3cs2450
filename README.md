@@ -4,9 +4,13 @@ Group 3 CS-2450-X01-X03-Spring 2026-XLIST | Jorgensen
 GitHub: https://github.com/lukesonne06/group3cs2450
 
 Users:
+
   Zaxbyya - Georgia Allen
+  
   millyballing - Milly Balling
+  
   jorudolph1 - Jamie Rudolph
+  
   lukesonne06 - Luke Sonne
 
 To run our unit tests, type "python unit_tests.py" in your preferred command line
