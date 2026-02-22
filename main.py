@@ -7,16 +7,16 @@ from prototype1 import UVSimulator    # Import UVUSimlator class
 
 
 class WindowSimulator:
-     """
-     Main GUI controller for the UV Simulator application
+    """
+    Main GUI controller for the UV Simulator application
 
-     Handles: 
-     - Creating and organizing all widgets
-     - Starting/stopping the simulator
-     - Manages the background execution
-     - Passes messages between Simulator and GUI
+    Handles: 
+    - Creating and organizing all widgets
+    - Starting/stopping the simulator
+    - Manages the background execution
+    - Passes messages between Simulator and GUI
 
-     """
+    """
 
     def __init__(self, win):
 
@@ -33,7 +33,7 @@ class WindowSimulator:
         to the user input. It prevents multiple simulator instances running at once
         '''
         self.messaging_queue=queue.Queue()
-        self.inputting_main_windowueue =queue.Queue()
+        self.inputting_queue =queue.Queue()
         self.uv_sim_instanceRunning=False
 
         # Builds all the widgets
@@ -209,37 +209,37 @@ class WindowSimulator:
         Validate propram input and starts simulator 
         in the background
         """
-            if self.uv_sim_instanceRunning ==True:
-                
-                # Prevents multiple executions to run at the same time
-                self.box_print("Already running.\n" ,"error")
+        if self.uv_sim_instanceRunning ==True:
+            
+            # Prevents multiple executions to run at the same time
+            self.box_print("Already running.\n" ,"error")
+
+            return
+        # Get a message from program editor
+        program_editor_text_pull =self.code_box.get("1.0","end").strip()
+        if not program_editor_text_pull:
+                self.box_print("Nothing to run.\n","error")
 
                 return
-            # Get a message from program editor
-            program_editor_text_pull =self.code_box.get("1.0","end").strip()
-            if not program_editor_text_pull:
-                    self.box_print("Nothing to run.\n","error")
+        # Clear previous output before starting
+        self.output_wiper()
+        
+        self.box_print("Starting...\n" ,"info")
 
-                    return
-            # Clear previous output before starting
-            self.output_wiper()
-            
-            self.box_print("Starting...\n" ,"info")
+        # Create the simulator instance using the input file
 
-            # Create the simulator instance using the input file
+        self.uv_sim_instance =UVSimulator(memory_size=100)
+        # Take user input for program words and load them into memory
 
-            self.uv_sim_instance =UVSimulator(memory_size=100)
-            # Take user input for program words and load them into memory
+        self.uv_sim_instance.load_from_text(program_editor_text_pull )
+        # Execute the program stored in memory
 
-            self.uv_sim_instance.load_from_text(program_editor_text_pull )
-            # Execute the program stored in memory
+        self.uv_sim_instanceRunning=True
 
-            self.uv_sim_instanceRunning=True
+        self.go_button.config(state ="disabled")
 
-            self.go_button.config(state ="disabled")
-
-            background_sim_thread =threading.Thread(target=self.background_running ,daemon=True)
-            background_sim_thread.start()
+        background_sim_thread =threading.Thread(target=self.background_running ,daemon=True)
+        background_sim_thread.start()
 
 
     def background_running(self):
@@ -320,27 +320,27 @@ class WindowSimulator:
         Validates user input and sends it to simulator
         through inputting_queue
         """
-            user_string =self.user_typed_string.get().strip()
+        user_string =self.user_typed_string.get().strip()
 
-            try:
-                user_int =int(user_string)
-                if user_int < -9999 or user_int > 9999:
-                        self.box_print("Need a 4 digit integer.\n" ,"error")
-                        return
-            except ValueError:
-                    self.box_print("Thats not an integer.\n","error")
+        try:
+            user_int =int(user_string)
+            if user_int < -9999 or user_int > 9999:
+                    self.box_print("Need a 4 digit integer.\n" ,"error")
                     return
-            self.user_typed_string.set("")
+        except ValueError:
+                self.box_print("Thats not an integer.\n","error")
+                return
+        self.user_typed_string.set("")
 
-            self.typeRow.pack_forget()
+        self.typeRow.pack_forget()
 
-            self.box_print(f"Got: {user_int}\n" ,"info")
+        self.box_print(f"Got: {user_int}\n" ,"info")
 
-            self.inputting_queue.put(user_string +"\n")
+        self.inputting_queue.put(user_string +"\n")
 
 
     def clear_everything(self):
-         """
+        """
         Resets console output and accumlator display. 
         Does not allow reset while simulator is runnung.
         """
@@ -362,13 +362,13 @@ class WindowSimulator:
         """
         Safely inserts colored text into console output box.
         """
-            self.outputting_box.config(state="normal")
+        self.outputting_box.config(state="normal")
 
-            self.outputting_box.insert("end" ,txt,colorTag)
+        self.outputting_box.insert("end" ,txt,colorTag)
 
-            self.outputting_box.see("end")
+        self.outputting_box.see("end")
 
-            self.outputting_box.config(state ="disabled")
+        self.outputting_box.config(state ="disabled")
 
 
     def output_wiper(self):
