@@ -16,6 +16,7 @@ To run our application, type "python main.py" in your preferred command line
 A new window with our application will open.
 
 Features:
+  
   A window to load in code from a .txt file, can be edited from our application
   
   Can run a BasicML file, outputting to the console and taking in user input at the bottom left of the window
