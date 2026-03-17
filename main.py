@@ -5,6 +5,9 @@ import queue
 import sys
 from prototype1 import UVSimulator    # Import UVUSimlator class
 
+# Defaults to UVU color scheme
+UVUGREEN = "#4C721D"
+WHITE = "#FFFFFF"
 
 class WindowSimulator:
     """
@@ -18,7 +21,10 @@ class WindowSimulator:
 
     """
 
-    def __init__(self, win):
+    def __init__(self, win, primary, secondary):
+
+        self.primary = primary
+        self.secondary = secondary
 
         # Store reference to the main Tkinter window
         self.main_tkinter_window =win
@@ -54,28 +60,28 @@ class WindowSimulator:
                 """
 
                 # --- Header Section ---
-                green_header =tk.Frame(self.main_tkinter_window ,bg="#5a9e47",height=60)
+                green_header =tk.Frame(self.main_tkinter_window ,bg=self.primary,height=60)
                 
                 green_header.pack(fill="x")
                 green_header.pack_propagate(False )
 
                 tk.Label(green_header ,
                     text="UVSim",font= ("Arial",18,"bold"),
-                    bg="#5a9e47" ,fg="white"
+                    bg=self.primary ,fg=self.secondary
                     ).pack(side ="left",padx=15,pady=10)
                 button_row_frame=tk.Frame(self.main_tkinter_window,bg ="#f0f0f0",pady=6)
                 button_row_frame.pack(fill ="x",padx=10)
 
                 # --- Button Control (Load / Run / Reset) ---
                 self.loading_button =tk.Button(button_row_frame ,text="Load File",
-                    font=("Arial" ,10),bg="#5a9e47",fg="white",
+                    font=("Arial" ,10),bg=self.primary,fg=self.secondary,
                     padx=10 ,pady=4,relief="flat",command=self.file_picker)
                 
                 self.loading_button.pack(side="left" ,padx=(0,8))
 
                 self.go_button=tk.Button(button_row_frame,text ="Run",
                                      
-                    font=("Arial",10) ,bg="#5a9e47",fg="white",
+                    font=("Arial",10) ,bg=self.primary,fg=self.secondary,
                     padx =10,pady=4,relief ="flat",command=self.sim_starter)
                 self.go_button.pack(side ="left",padx=(0,8))
 
@@ -146,7 +152,7 @@ class WindowSimulator:
 
                 tk.Button(self.typeRow ,text="Submit",font=("Arial",10),
                           
-                    bg ="#5a9e47",fg="white",padx=8,pady=2,
+                    bg =self.primary,fg=self.secondary,padx=8,pady=2,
                         relief="flat" ,command=self.input_sender).pack(side="left")
 
                 self.typeRow.pack_forget()
@@ -433,10 +439,20 @@ class InputInterceptor:
 
 
 def main():
+
+    primary = UVUGREEN
+    secondary = WHITE
+
+    if len(sys.argv) > 1:
+        file_name = sys.argv[1]
+        with open(file_name, "r") as f:
+            primary = f.readline().strip()
+            secondary = f.readline().strip()
+
     # Entry point of application
     main_window =tk.Tk()
 
-    WindowSimulator(main_window)
+    WindowSimulator(main_window, primary, secondary)
     main_window.mainloop()
 
 
