@@ -440,6 +440,7 @@ class InputInterceptor:
 
 def main():
 
+    # Default UVU color scheme, additional .txt color file is now an option
     primary = UVUGREEN
     secondary = WHITE
 
