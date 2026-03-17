@@ -19,6 +19,15 @@ To run our application, type "python main.py" in your preferred command line
 
 A new window with our application will open.
 
+Color scheme:
+
+    To use a custom color scheme, run main.py with a .txt file containing a primary and secondary color.
+    e.x. "python main.py colors.txt"
+    If no color file is presented, the GUI will default to the UVU colors #4C721D and #FFFFFF
+    Our program uses hexadecimal colors, and will only accept such input. A color scheme file must be formatted like so:
+    Line 1: #FF22CC
+    Line 2: #1122DD
+
 Features:
   
   A window to load in code from a .txt file, can be edited from our application
