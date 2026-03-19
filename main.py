@@ -79,6 +79,20 @@ class WindowSimulator:
                 
                 self.loading_button.pack(side="left" ,padx=(0,8))
 
+                self.save_button = tk.Button(
+                    button_row_frame,
+                    text="Save File",
+                    font=("Arial", 10),
+                    bg=self.primary,
+                    fg=self.secondary,
+                    padx=10,
+                    pady=4,
+                    relief="flat",
+                    command=self.file_saver
+                )
+
+                self.save_button.pack(side="left", padx=(0, 8))
+
                 self.go_button=tk.Button(button_row_frame,text ="Run",
                                      
                     font=("Arial",10) ,bg=self.primary,fg=self.secondary,
@@ -209,6 +223,32 @@ class WindowSimulator:
                 # Read error
                 self.box_print("Couldnt open that file\n" ,"error")
 
+    def file_saver(self):
+        """
+        Opens a save dialog and writes the current editor
+        contents to a user-selected file.
+        """
+        file_dialog_path = filedialog.asksaveasfilename(
+            title="Save BasicML File",
+            defaultextension=".txt",
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
+        )
+
+        if not file_dialog_path:
+            return
+
+        try:
+            # Get contents from editor
+            content = self.code_box.get("1.0", "end")
+
+            # Write to file
+            with open(file_dialog_path, "w") as f:
+                f.write(content)
+
+            self.box_print(f"Saved: {file_dialog_path}\n", "info")
+
+        except Exception as e:
+            self.box_print("Couldn't save that file\n", "error")
 
     def sim_starter(self):
         """
@@ -459,7 +499,6 @@ def main():
 
 if __name__ =="__main__":
     main()
-
 
 
 
