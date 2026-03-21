@@ -190,24 +190,27 @@ class WindowSimulator:
                 tk.Label(right_panel_frame ,text="One instruction per line. End with -99999.",
                          
                     font=("Arial",8) ,bg="#f0f0f0",fg="#888888").pack(anchor="w")
-
+        
+                # Bind keystrokes to update line counter
+                self.code_box.bind("<KeyRelease>", lambda e: self.update_line_count())
+        
                 # --- Edit Toolbar and line counter ---
                 self.add_edit_toolbar()
                 self.update_line_count()
 
     def enforce_max_lines(self):
-         """Prevent code box from exceeding 100 lines."""
+        """Prevent code box from exceeding 100 lines."""
         content = self.code_box.get("1.0", "end-1c")
         lines = content.split("\n")
         if len(lines) > 100:
             self.code_box.delete("1.0","end")
             self.code_box.insert("1.0", "\n".join(lines[:100]))
-            self.box_brint("Max 100 lines allowed.\n", "error")
+            self.box_print("Max 100 lines allowed.\n", "error")
 
-def add_edit_toolbar(self):
-    """Creates cut/copy/paste/delete/add toolbar above the code editor."""
-    toolbar = tk.Frame(self.main_tkinter_window, bg="#f0f0f0")
-    toolbar.pack(fill="x", padx=10, pady=(0, 6))
+   def add_edit_toolbar(self):
+        """Creates cut/copy/paste/delete/add toolbar above the code editor."""
+        toolbar = tk.Frame(self.main_tkinter_window, bg="#f0f0f0")
+        toolbar.pack(fill="x", padx=10, pady=(0, 6))
 
     btn_style = dict(font=("Arial", 10), bg=self.primary, fg=self.secondary,
                      padx=10, pady=4, relief="flat")
