@@ -2,7 +2,16 @@ class UVSimulator:
     def __init__(self, memory_size=100):
         # Initialize the simulator with file and memory size
         self.memory = [0] * memory_size    # Memory assigned as a list of zeros
-
+        
+    def load_words(self):
+        # Reads self.file_name into memory via load_from_text(); prints an error if the file is not found.
+        try:
+            with open(self. file_name, 'r') as f:
+                text = f.read()
+            self.load_from_text(text)
+        except FileNotFoundError:
+            print(f"Error: File '{self.file_name}' not found.")
+            
     def load_from_text(self, text):
         i = 0
         words = text.split()   # handles spaces and new lines
