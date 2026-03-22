@@ -15,7 +15,7 @@ Users:
 
 To run our unit tests, type "python unit_tests.py" in your preferred command line
 
-To run our application, type "python main.py" in your preferred command line
+To run our application, type "python main.py" in your preferred command line. To run with a custom color scheme, type "python main.py colorTest.txt" where colorTest.txt is a file containing hex colors, one per line.
 
 A new window with our application will open.
 
@@ -37,3 +37,7 @@ Features:
   A reset button, allowing you to run multiple programs in one session
   
   A display of the value in the accumulator
+
+  A save file button, allowing you to save your current program to any folder on your system.
+  
+  An edit toolbar with cut,copy, paste, delete line, and add line buttons for editing your program before running it. A line counter displays how many instructions are loaded out of the maximum 100. 
