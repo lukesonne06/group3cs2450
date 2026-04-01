@@ -74,7 +74,7 @@ class WindowSimulator:
 
                 # --- Button Control (Load / Run / Reset) ---
                 self.loading_button =tk.Button(button_row_frame ,text="Load File",
-                    font=("Arial" ,10),bg=self.primary,fg=self.secondary,
+                    font=("Arial" ,15),bg="#E07B1f",fg=self.secondary,
                     padx=10 ,pady=4,relief="flat",command=self.file_picker)
                 
                 self.loading_button.pack(side="left" ,padx=(0,8))
@@ -82,8 +82,9 @@ class WindowSimulator:
                 self.save_button = tk.Button(
                     button_row_frame,
                     text="Save File",
-                    font=("Arial", 10),
-                    bg=self.primary,
+                    font=("Arial", 15),
+                    bg="#E07B1f",
+                    #bg=self.primary,
                     fg=self.secondary,
                     padx=10,
                     pady=4,
@@ -95,13 +96,13 @@ class WindowSimulator:
 
                 self.go_button=tk.Button(button_row_frame,text ="Run",
                                      
-                    font=("Arial",10) ,bg=self.primary,fg=self.secondary,
+                    font=("Arial",15),bg="#E07B1f",fg=self.secondary,
                     padx =10,pady=4,relief ="flat",command=self.sim_starter)
                 self.go_button.pack(side ="left",padx=(0,8))
 
                 self.resetting_button =tk.Button(button_row_frame ,text="Reset",
                                          
-                    font=("Arial",10),bg ="#888888",fg="white",
+                    font=("Arial",15),bg ="#555555",fg="white",
                     padx=10,pady =4,relief="flat",command=self.clear_everything)
                 
                 self.resetting_button.pack(side ="left")
@@ -187,102 +188,14 @@ class WindowSimulator:
                 code_editor_scrollbar.config(command =self.code_box.yview)
 
                 self.code_box.insert("end" ,"+1007\n+1008\n+2007\n+3008\n+2109\n+1109\n+4300\n+0000\n+0000\n+0000\n-99999")
-
                 tk.Label(right_panel_frame ,text="One instruction per line. End with -99999.",
                          
                     font=("Arial",8) ,bg="#f0f0f0",fg="#888888").pack(anchor="w")
 
-                # Bind keystrokes to update line counter
-                self.code_box.bind("<KeyRelease>" ,lambda e: self.update_line_count())
-
-                # --- Edit Toolbar and line counter (must come AFTER code_box is created) ---
-                self.add_edit_toolbar()
-                self.update_line_count()
 
 
-    def enforce_max_lines(self):
-        """Prevent code box from exceeding 100 lines."""
-        content =self.code_box.get("1.0" ,"end-1c")
-        lines =content.split("\n")
-        if len(lines) > 100:
-            self.code_box.delete("1.0" ,"end")
-            self.code_box.insert("1.0" ,"\n".join(lines[:100]))
-            self.box_print("Max 100 lines allowed.\n" ,"error")
 
 
-    def add_edit_toolbar(self):
-        """Creates cut/copy/paste/delete/add toolbar above the code editor."""
-        toolbar =tk.Frame(self.main_tkinter_window ,bg="#f0f0f0")
-        toolbar.pack(fill="x" ,padx=10,pady=(0,6))
-
-        btn_style =dict(font=("Arial",10) ,bg=self.primary,fg=self.secondary,
-                     padx=10,pady=4,relief="flat")
-
-        tk.Label(toolbar ,text="Edit:" ,font=("Arial",10) ,bg="#f0f0f0").pack(side="left" ,padx=(0,6))
-
-        tk.Button(toolbar ,text="Cut"         ,command=self.edit_cut         ,**btn_style).pack(side="left" ,padx=(0,8))
-        tk.Button(toolbar ,text="Copy"        ,command=self.edit_copy        ,**btn_style).pack(side="left" ,padx=(0,8))
-        tk.Button(toolbar ,text="Paste"       ,command=self.edit_paste       ,**btn_style).pack(side="left" ,padx=(0,8))
-        tk.Button(toolbar ,text="Delete Line" ,command=self.edit_delete_line ,**btn_style).pack(side="left" ,padx=(0,8))
-        tk.Button(toolbar ,text="Add Line"    ,command=self.edit_add_line    ,**btn_style).pack(side="left")
-
-        # Line counter label
-        self.line_count_var =tk.StringVar(value="Lines: 0/100")
-        tk.Label(toolbar ,textvariable=self.line_count_var ,
-                 font=("Arial",10) ,bg="#f0f0f0").pack(side="right" ,padx=(0,8))
-
-
-    def update_line_count(self):
-        """Updates the line counter label."""
-        content =self.code_box.get("1.0" ,"end-1c")
-        lines =[l for l in content.split("\n") if l.strip()]
-        self.line_count_var.set(f"Lines: {len(lines)}/100")
-
-
-    def edit_cut(self):
-        try:
-            self.code_box.event_generate("<<Cut>>")
-        except:
-            pass
-        self.update_line_count()
-
-
-    def edit_copy(self):
-        try:
-            self.code_box.event_generate("<<Copy>>")
-        except:
-            pass
-
-
-    def edit_paste(self):
-        try:
-            self.code_box.event_generate("<<Paste>>")
-            # Check limit after paste completes
-            self.main_tkinter_window.after(10 ,self.enforce_max_lines)
-            self.main_tkinter_window.after(20 ,self.update_line_count)
-        except:
-            pass
-
-
-    def edit_delete_line(self):
-        """Deletes the line the cursor is currently on."""
-        cursor_pos =self.code_box.index("insert")
-        line_num =cursor_pos.split(".")[0]
-        self.code_box.delete(f"{line_num}.0" ,f"{line_num}.0 lineend+1c")
-        self.update_line_count()
-
-
-    def edit_add_line(self):
-        """Inserts a blank line after the current cursor line."""
-        content =self.code_box.get("1.0" ,"end-1c")
-        lines =content.split("\n")
-        if len(lines) >= 100:
-                self.box_print("Max 100 lines reached. Cannot add more.\n" ,"error")
-                return
-        cursor_pos =self.code_box.index("insert")
-        line_num =cursor_pos.split(".")[0]
-        self.code_box.insert(f"{line_num}.end" ,"\n")
-        self.update_line_count()
 
 
     def file_picker(self):
@@ -305,15 +218,11 @@ class WindowSimulator:
 
             self.code_box.insert("end" ,loaded_file_contents)
 
-            self.enforce_max_lines()
-            self.update_line_count()
-
             self.box_print(f"Loaded: {file_dialog_path}\n" ,"info")
 
         except:
                 # Read error
                 self.box_print("Couldnt open that file\n" ,"error")
-
 
     def file_saver(self):
         """
@@ -342,7 +251,6 @@ class WindowSimulator:
         except Exception as e:
             self.box_print("Couldn't save that file\n", "error")
 
-
     def sim_starter(self):
         """
         Validate propram input and starts simulator 
@@ -360,10 +268,6 @@ class WindowSimulator:
                 self.box_print("Nothing to run.\n","error")
 
                 return
-
-        # Enforce max line limit before starting
-        self.enforce_max_lines()
-        
         # Clear previous output before starting
         self.output_wiper()
         
@@ -454,6 +358,8 @@ class WindowSimulator:
         except queue.Empty:
             pass
         self.main_tkinter_window.after(100 ,self.queue_checker)
+
+
 
 
     def input_sender(self ,event=None):
@@ -568,6 +474,9 @@ class InputInterceptor:
     def readline(self):
             self.messages.put(("need_input" ,""))
             return   self.q.get()
+
+
+
 
 
 def main():
