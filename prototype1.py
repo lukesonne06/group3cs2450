@@ -1,12 +1,13 @@
 class UVSimulator:
-    def __init__(self, memory_size=100):
+    def __init__(self, memory_size=250, file_name=None):
         # Initialize the simulator with file and memory size
         self.memory = [0] * memory_size    # Memory assigned as a list of zeros
+        self.file_name = file_name
         
     def load_words(self):
         # Reads self.file_name into memory via load_from_text(); prints an error if the file is not found.
         try:
-            with open(self. file_name, 'r') as f:
+            with open(self.file_name, 'r') as f:
                 text = f.read()
             self.load_from_text(text)
         except FileNotFoundError:
@@ -25,10 +26,10 @@ class UVSimulator:
             except ValueError:
                 print(f"Invalid input (not an integer): {word}")
                 continue
-            if value == -99999:
+            if value == -999999:
                 break
-            if value < -9999 or value > 9999:
-                print(f"Invalid input (not four digits): {value}")
+            if value < -999999 or value > 999999:
+                print(f"Invalid input (not 6 digits): {value}")
             else:
                 self.memory[i] = value
                 i += 1
@@ -41,21 +42,20 @@ class UVSimulator:
         while pc < len(self.memory):
             instruction = self.memory[pc]    # Fetch instruction
 
-            if instruction < 0:
-                # Negative instruction value is invalid
-                print("Error: Negative instruction value.")
+            opcode = instruction // 1000   # First 3 digits = operation code
+            operand = instruction % 1000    # Last 3 digits = memory address
+
+            if operand < 0 or operand >= len(self.memory):
+                print(f"Error: Invalid memory address {operand}.")
                 break
-
-            opcode = instruction // 100    # Frist two digits = operation code
-            operand = instruction % 100    # Last two digits = memory address
-
+            
             # --- Opcodes ---
             if opcode == 10:    # Read: input from user into memory
                 while True:
                     try:
                         print("Enter an interger:")    # Prompt user
                         value = int(input())
-                        if -9999 <= value <= 9999:     # Confirm number is 4 digits
+                        if -999999 <= value <= 999999:     # Confirm number is 4 digits
                             self.memory[operand] = value
                             break
                         else:
@@ -82,7 +82,7 @@ class UVSimulator:
                 if self.memory[operand] == 0:
                     print("Error: Division by zero.")
                     break
-                accumulator //= self.memory[operand]
+                accumulator = int(accumulator / self.memory[operand])
             
             elif opcode == 33:    # Multiply: multiply accumlator by memory value
                 accumulator *= self.memory[operand]
@@ -106,12 +106,9 @@ class UVSimulator:
                 print(f"Invalid opcode {opcode} at address {pc}")
                 break
 
+            # overflow check for 6 digit values
+            if accumulator < -999999 or accumulator > 999999:
+                print("Error: Accumulator overflow.")
+                break
+
             pc += 1    # Move to next job
-
-
-
-
-
-
-
-
