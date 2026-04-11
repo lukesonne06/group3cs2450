@@ -495,11 +495,37 @@ def main():
             primary = f.readline().strip()
             secondary = f.readline().strip()
 
+    home = tk.Tk()
+    home.title("UVSim Home")
+    home.geometry("1000x750")
+    home.configure(bg = "#f0f0f0")
+
+
+    sims = []
+
+    def new_simulator():
+        sub_window = tk.Toplevel(home)
+        sim = WindowSimulator(sub_window, primary, secondary)
+        sims.append(sim)
+
+        def on_close():
+            if sim in sims:
+                sims.remove(sim)
+            sub_window.destroy()
+
+        sub_window.protocol("WM_DELETE_WINDOW", on_close)
+    
+    tk.Button(home, text="New Simulator", command=new_simulator).pack(pady=10)
+    
+    '''
     # Entry point of application
     main_window =tk.Tk()
 
     WindowSimulator(main_window, primary, secondary)
-    main_window.mainloop()
+
+    '''
+
+    home.mainloop()
 
 
 if __name__ =="__main__":
