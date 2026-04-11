@@ -3,7 +3,7 @@ from tkinter import filedialog
 import threading
 import queue
 import sys
-from prototype import UVSimulator    # Import UVUSimlator class
+from prototype1 import UVSimulator    # Import UVUSimlator class
 
 # Defaults to UVU color scheme
 UVUGREEN = "#4C721D"
