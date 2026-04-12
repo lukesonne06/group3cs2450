@@ -497,7 +497,7 @@ def main():
 
     home = tk.Tk()
     home.title("UVSim Home")
-    home.geometry("1000x750")
+    home.geometry("400x200")
     home.configure(bg = "#f0f0f0")
 
 
@@ -515,7 +515,24 @@ def main():
 
         sub_window.protocol("WM_DELETE_WINDOW", on_close)
     
-    tk.Button(home, text="New Simulator", command=new_simulator).pack(pady=10)
+    green_header =tk.Frame(home,bg=primary,height=60)          
+    green_header.pack(fill="x")
+    green_header.pack_propagate(False )
+
+    tk.Label(green_header,
+        text="Welcome to UVSim!",font= ("Arial",18,"bold"),
+        bg=primary ,fg=secondary
+        ).pack(side ="left",padx=15, pady=10)
+
+    tk.Button(home, text="Create Workspace",
+        command=new_simulator,
+        font=("Arial", 15),
+        bg="#E07B1f",
+        fg="#f0f0f0",
+        padx=10,
+        pady=4,
+        relief="flat"
+        ).pack(pady=50)
     
     '''
     # Entry point of application
