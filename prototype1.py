@@ -1,3 +1,26 @@
+def detect_file_format(words):
+    #figures out if a list of word strings are old 4-digit format or 6. returns four if all values fit in the old digit range
+    #or six if any value needs the new 6 digit range ingnores sentinel
+    for word in words:
+        try:
+            value = int(word)
+        except ValueError:
+            continue   
+        if value == -99999 or value == -999999:
+            continue  
+        if value < -9999 or value > 9999:
+            return "six"  
+    return "four"
+
+def convert_four_digit_word_to_six(value):
+    #converts 4 digit to 6. 
+    if value < 0:
+        return value
+    opcode_old = value // 100   
+    operand_old = value % 100     
+    new_value = opcode_old * 1000 + operand_old
+    return new_value
+
 class UVSimulator:
     def __init__(self, memory_size=250, file_name=None):
         # Initialize the simulator with file and memory size
@@ -17,6 +40,12 @@ class UVSimulator:
         i = 0
         words = text.split()   # handles spaces and new lines
 
+        #auto detect whether this is an old 4 digit file or a new 6 digit file
+        file_format = detect_file_format(words)
+        if file_format == "four":
+            print("Info: Detected old 4-digit format. Converting automaticallyy.")
+
+
         for word in words:
             if i >= len(self.memory):
                 print("Memory full!")
@@ -26,10 +55,12 @@ class UVSimulator:
             except ValueError:
                 print(f"Invalid input (not an integer): {word}")
                 continue
-            if value == -999999:
+            if value == -99999 or value == -999999: 
                 break
+            if file_format == "four":
+                value = convert_four_digit_word_to_six(value)
             if value < -999999 or value > 999999:
-                print(f"Invalid input (not 6 digits): {value}")
+                print(f"Invalid input (not 6 digits): {value}")  
             else:
                 self.memory[i] = value
                 i += 1
@@ -41,7 +72,15 @@ class UVSimulator:
 
         while pc < len(self.memory):
             instruction = self.memory[pc]    # Fetch instruction
-
+            
+            if instruction < 0:
+                print("Error: Negative instruction value.")
+                break
+            
+            if instruction == 0:
+                pc += 1
+                continue
+            
             opcode = instruction // 1000   # First 3 digits = operation code
             operand = instruction % 1000    # Last 3 digits = memory address
 
