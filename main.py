@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import ttk, filedialog
 import threading
 import queue
 import sys
@@ -27,12 +27,14 @@ class WindowSimulator:
         self.secondary = secondary
 
         # Store reference to the main Tkinter window
-        self.main_tkinter_window =win
+        # self.main_tkinter_window =win
+        self.frame = tk.Frame(win)
+        self.main_tkinter_window = self.frame
 
         # Configure Window Properties
-        self.main_tkinter_window.title("UVSim")
+        # self.main_tkinter_window.title("UVSim")
         self.main_tkinter_window.configure(bg ="#f0f0f0")
-        self.main_tkinter_window.geometry("800x600")
+        # self.main_tkinter_window.geometry("800x600")
         
         '''
         Queue used to for the simulator to communicate with the GUI 
@@ -49,6 +51,9 @@ class WindowSimulator:
         self.main_tkinter_window.after(100 ,self.queue_checker)
 
     
+    def get_frame(self):
+         return self.frame
+
     def widget_creator(self):
                 """
                 Creates and lays out all GUI components:
@@ -497,43 +502,44 @@ def main():
 
     home = tk.Tk()
     home.title("UVSim Home")
-    home.geometry("400x200")
+    home.geometry("900x600")
     home.configure(bg = "#f0f0f0")
 
+    notebook = ttk.Notebook(home)
+    notebook.pack(fill="both", expand=True)
 
-    sims = []
+    tabs = 1
 
-    def new_simulator():
-        sub_window = tk.Toplevel(home)
-        sim = WindowSimulator(sub_window, primary, secondary)
-        sims.append(sim)
+    def new_tab():
+        nonlocal tabs
+        sim = WindowSimulator(notebook, primary, secondary)
+        frame = sim.get_frame()
 
-        def on_close():
-            if sim in sims:
-                sims.remove(sim)
-            sub_window.destroy()
+        notebook.add(frame, text=f"UVSim {tabs}")
+        notebook.select(frame)
+        tabs +=1
 
-        sub_window.protocol("WM_DELETE_WINDOW", on_close)
-    
-    green_header =tk.Frame(home,bg=primary,height=60)          
-    green_header.pack(fill="x")
-    green_header.pack_propagate(False )
+    def close_tab():
+        current = notebook.select()
+        if not current:
+            return
+        notebook.forget(current)
+            
 
-    tk.Label(green_header,
-        text="Welcome to UVSim!",font= ("Arial",18,"bold"),
-        bg=primary ,fg=secondary
-        ).pack(side ="left",padx=15, pady=10)
+    top_bar = tk.Frame(home, bg="#f0f0f0")
+    top_bar.pack(fill="x")
 
-    tk.Button(home, text="Create Workspace",
-        command=new_simulator,
-        font=("Arial", 15),
-        bg="#E07B1f",
-        fg="#f0f0f0",
-        padx=10,
-        pady=4,
-        relief="flat"
-        ).pack(pady=50)
-    
+    tk.Button(top_bar,
+        text="Add Sim",
+        bg="green",
+        fg="white",
+        command=new_tab).pack(side="left", padx=5, pady=5)
+    tk.Button(top_bar,
+              text="Close Sim",
+        bg="red",
+        fg="white",
+        command=close_tab).pack(side="left", padx=5, pady=5)
+
     '''
     # Entry point of application
     main_window =tk.Tk()
@@ -541,7 +547,7 @@ def main():
     WindowSimulator(main_window, primary, secondary)
 
     '''
-
+    new_tab()
     home.mainloop()
 
 
