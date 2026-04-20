@@ -13,69 +13,121 @@ Users:
   
   lukesonne06 - Luke Sonne
 
-To run our unit tests, type "python unit_tests.py" in your preferred command line
+**Introduction:**
+  The BasicML Application is a graphical program to load,edit, and execute BasicML code. It provides a user-friendly interfface for writing and testing       machine-level instructions, with support for both legacy and extended insturction format.
 
-To run our application, type "python main.py" in your preferred command line. To run with a custom color scheme, type "python main.py colorTest.txt" where colorTest.txt is a file containing hex colors, one per line.
+ **Getting Started**
+  Running the application
+  To run our unit tests, type "python unit_tests.py" in your preferred command line
 
-A new window with our application will open.
+  To run our application, type "python main.py" in your preferred command line. To run with a custom color scheme, type "python main.py colorTest.txt" where colorTest.txt is a file containing hex colors, one per line.
 
-Color scheme:
+**User Interface Overview**
 
-    To use a custom color scheme, run main.py with a .txt file containing a primary and secondary color.
-    e.x. "python main.py colors.txt"
-    If no color file is presented, the GUI will default to the UVU colors #4C721D and #FFFFFF
-    Our program uses hexadecimal colors, and will only accept such input. A color scheme file must be formatted like so:
-    Line 1: #FF22CC
-    Line 2: #1122DD
+  When application launches, a new window will appear containing:
+    - Code Editor Window-Load and edit BAsicML programs
+    - Console Output Area-Displays program output
+    - User Input Field-Accepts input during execution
+    - Toolbar-Editing and file management tools
+    - Accumulator Display-Shows the current accumulator value
+    - Line Counter-Displays the number of instructions used
 
-Features:
+**Features & Functionality**
+
+  *File Management:*
+    - Load File: import a .txt file containing BasicML instructions
+    - Save File: Save your current program to any directory
+    - Multiple Files: Open and work with multiple files simultaneously
+ 
+*Code Editing Tools:*
+
+   The application includes a toolbar with the following opotions:
+  - Cut
+  - Copy
+  - Paste
+  - Delete Line
+  - Add Line
+  The editor also displays how many instructions are currently loaded.
+
+*Program Execution*
+
+  - Run BasicML programs directly within the application
+  - View output in the sonsole panel
+  - Provide input via the input field
+ 
+*Reset Function*
+
+  - The Reset button clears the current program state
+  - Allows multiple programs to be run in a single session
+
+*Accumulator Display*
+ 
+  - Displays the current value of the accumulator in real time during execution
+ 
+**Instruction Format Support**
   
-  A window to load in code from a .txt file, can be edited from our application
+This application supports two instruction formats:
+ 
+  4-Digit Format (Legacy)
+  - Structure
+  -     00AA
+  -     00 = Opcode
+  -     AA = Memory
+ 
+  6-Digit Format (Extended)
+  -Structure
+  000AAA
+  -     000 = Opcode
+  -     AAA = Memeory Address
+
+**Important notes**
+
+  - Files must use only one format (4-digit or 6-digit)
+  - Mixing formats within a single file is not allowed
+ 
+**Memory Constraints**
   
-  Can run a BasicML file, outputting to the console and taking in user input at the bottom left of the window
+  -     Maximum program size: 250 instructions
+  -     Valid memory address: 000-249
+
+Programs that exceed these limits will not be loaded or executed
+
+Arithmetic and Overglow Handling
   
-  A reset button, allowing you to run multiple programs in one session
+  - Supports operations on 6-ditit values
+  - Overflow behaivor follows the same rules as the origional 4-digit implementation
+
+**Input Validation**
+ 
+  The application enforces strict validation rules:
+
+  *Color Files*
+
+  - Must contain valid hexadecimal values only
+  - Exavtly one color per line
   
-  A display of the value in the accumulator
+*Memory Address*
 
-  A save file button, allowing you to save your current program to any folder on your system.
+  -     Must be within the 000-249 range
+
+*Instruction Format*
+
+  - Must match either 4-digit or 6-digit format
+  - Mixed formats are not permitted
+
+**Error Handling**
   
-  An edit toolbar with cut,copy, paste, delete line, and add line buttons for editing your program before running it. A line counter displays how many instructions are loaded out of the maximum 100. 
+  The application prevents
+  
+  - Invalid memory access outsid allowed range
+  - Incorrect instruction formats
+  - Impoper color file inputs
 
-  Maximum program size increased form 100 to 250 lines
+**Summary**
+The BasicML Application provides:
 
-  Memory address now range from 000 yo 249
-
-  Supports new 6-digit word format
-
-  Updates can handle 6-digit values with overflow handling
-
-  Prevents invalid memory access outside the 000-249 range
-
-  Supports multiple files open at the same time within the application
-
-  ## File Format Support
-
-  This application supports both legacy 4-digit and new 6-digit file formats
-  - 4-digit format: 2-digit opcode + 2-digit memory address
-  - 6-digit format: 3-digit opcode + 3-digit memory address
-
-  Files must contain only one format and cannot mix 4-digit and 6-digit instructions
-
- ## Memory Constraints
-
-- Maximum of 250 instructions per program
-- Valid memory addresses range from 000 to 249
-- Programs exceeding this limit will not be loaded or executed
-
-## Overflow Handling
-
-All arithmetic operations support 6-digit values. Overflow behavior follows the same rules as the previous 4-digit implementation.
-
-## Input Validation
-
-- Only hexadecimal values are accepted for color files
-- Only valid memory addresses (000–249) are allowed
-- Instruction format must match either 4-digit or 6-digit standards
-
+  - A complete enviromente for editing and running BasicML programs
+  - Support for both legacy and extended instruction formats
+  - Robust validation and error handling
+  - Customizable user interface through color schemes
 
