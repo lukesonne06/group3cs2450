@@ -216,14 +216,18 @@ class WindowSimulator:
         if not file_dialog_path:
                 return
         try:
-            # Replace current editor contents with file contents
-            with open(file_dialog_path ,"r") as f:
-                    loaded_file_contents =f.read()
-            self.code_box.delete("1.0" ,"end")
-
-            self.code_box.insert("end" ,loaded_file_contents)
-
-            self.box_print(f"Loaded: {file_dialog_path}\n" ,"info")
+            with open(file_dialog_path, "r") as f:
+                loaded_file_contents = f.read()
+            lines = loaded_file_contents.splitlines()
+            # Block files over 250 lines
+            if len(lines) > 250:
+                self.box_print("Error: File exceeds 250 lines. Not loaded.\n", "error")
+                return
+            # Otherwise load normally
+            self.code_box.delete("1.0", "end")
+            self.code_box.insert("end", loaded_file_contents)
+            
+            self.box_print(f"Loaded: {file_dialog_path}\n", "info")
 
         except:
                 # Read error
