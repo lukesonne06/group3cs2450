@@ -31,11 +31,14 @@ Users:
     - Toolbar-Editing and file management tools
     - Accumulator Display-Shows the current accumulator value
     - Line Counter-Displays the number of instructions used
+    <img width:auto height:auto alt="image" src="https://github.com/user-attachments/assets/d3a423e8-6f28-4f6b-826a-d8266116d5b9" />
+
 
 **Features & Functionality**
 
   *File Management:*
     - Load File: import a .txt file containing BasicML instructions
+    <img width:auto height:auto alt="image" src="https://github.com/user-attachments/assets/05a957fa-08d8-47ad-b49a-fed5c70505df" />
     - Save File: Save your current program to any directory
     - Multiple Files: Open and work with multiple files simultaneously
  
@@ -52,8 +55,10 @@ Users:
 *Program Execution*
 
   - Run BasicML programs directly within the application
-  - View output in the sonsole panel
+  - View output in the console panel
   - Provide input via the input field
+  <img width:auto height:auto alt="image" src="https://github.com/user-attachments/assets/0bff165d-c600-4899-9d6b-e8e7c97f7401" />
+
  
 *Reset Function*
 
