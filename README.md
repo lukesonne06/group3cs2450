@@ -1,17 +1,17 @@
 # UVSim
-Group 3 CS-2450-X01-X03-Spring 2026-XLIST | Jorgensen
+**Group 3** CS-2450-X01-X03-Spring 2026-XLIST | Jorgensen
 
-GitHub: https://github.com/lukesonne06/group3cs2450
+**GitHub:** https://github.com/lukesonne06/group3cs2450
 
-Users:
+**Team Members:**
 
-  Zaxbyya - Georgia Allen
+  - Georgia Allen (Zaxbyya)
   
-  millyballing - Milly Balling
+  - Milly Balling (millyballing)
   
-  jorudolph1 - Jamie Rudolph
+  - Jamie Rudolph (jorudolph1)
   
-  lukesonne06 - Luke Sonne
+  - Luke Sonne (lukesonne06)
 
 **Introduction:**
   The BasicML Application is a graphical program to load,edit, and execute BasicML code. It provides a user-friendly interfface for writing and testing       machine-level instructions, with support for both legacy and extended insturction format.
@@ -25,20 +25,18 @@ Users:
 **User Interface Overview**
 
   When application launches, a new window will appear containing:
-    - Code Editor Window-Load and edit BAsicML programs
+    - Code Editor Window-Load and edit BasicML programs
     - Console Output Area-Displays program output
     - User Input Field-Accepts input during execution
     - Toolbar-Editing and file management tools
     - Accumulator Display-Shows the current accumulator value
     - Line Counter-Displays the number of instructions used
-    <img width:auto height:auto alt="image" src="https://github.com/user-attachments/assets/d3a423e8-6f28-4f6b-826a-d8266116d5b9" />
 
 
 **Features & Functionality**
 
   *File Management:*
     - Load File: import a .txt file containing BasicML instructions
-    <img width:auto height:auto alt="image" src="https://github.com/user-attachments/assets/05a957fa-08d8-47ad-b49a-fed5c70505df" />
     - Save File: Save your current program to any directory
     - Multiple Files: Open and work with multiple files simultaneously
  
@@ -57,6 +55,9 @@ Users:
   - Run BasicML programs directly within the application
   - View output in the console panel
   - Provide input via the input field
+
+  <img width:auto height:auto alt="image" src="https://github.com/user-attachments/assets/d3a423e8-6f28-4f6b-826a-d8266116d5b9" />
+  <img width:auto height:auto alt="image" src="https://github.com/user-attachments/assets/05a957fa-08d8-47ad-b49a-fed5c70505df" />
   <img width:auto height:auto alt="image" src="https://github.com/user-attachments/assets/0bff165d-c600-4899-9d6b-e8e7c97f7401" />
 
  
@@ -76,8 +77,8 @@ This application supports two instruction formats:
   4-Digit Format (Legacy)
   - Structure
   -     00AA
-  -     00 = Opcode
-  -     AA = Memory
+  -     000 = Opcode
+  -     AAA = Memory
  
   6-Digit Format (Extended)
   -Structure
